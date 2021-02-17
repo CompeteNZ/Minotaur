@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->post('monitors/create', function(Request $req
 
     $monitor = new Monitor;
     $monitor->user_id = $user->id;
-    $monitor->monitor_id = Str::random(12);
+    $monitor->monitor_id = strtoupper(Str::random(12));
     $monitor->monitor_type = $request->input('monitor_type');
     $monitor->monitor_source = $request->input('monitor_source');
     $monitor->monitor_schedule = $request->input('monitor_schedule', 15);
