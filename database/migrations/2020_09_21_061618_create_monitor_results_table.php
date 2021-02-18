@@ -19,7 +19,7 @@ class CreateMonitorResultsTable extends Migration
             $table->string('monitor_type');
             $table->string('monitor_source');
             $table->integer('monitor_result');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

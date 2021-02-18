@@ -1,23 +1,36 @@
+# DESCRIPTION
+# Run monitor ping checks and store results in the db
+# monitor_source = host address
+
+# DEPENDENCIES
+# Install python
+# Install ping3 "pip install ping3"
+# Install mariadb "pip install mariadb"
+# Install dotenv "pip install python-dotenv"
+
+# HOW TO RUN
+# run cmd "python mintotaurPingMonitor.py"
+# automate on windows setup a bat with command "python <script>" see batch folder for batch files
+# automate on linux setup cron with command "python <script>"
+
+# TODO
+
 import ping3
 import mariadb
 import sys
 import datetime
+import os
 
-# INFO
-# Run monitor ping checks and store results in the db
-# monitor_source = host address
-# to automate on windows setup a bat with command "python <script>""
-# to automate on linux setup cron with command "python <script>""
-
-# TODO
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 try:
     conn = mariadb.connect(
-        user="root",
-        password="",
-        host="127.0.0.1",
-        port=3306,
-        database="minotaur_s"
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        database=os.getenv("DB_DATABASE")
     )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
@@ -29,7 +42,7 @@ cursor = conn.cursor()
 # get list of ping monitors from the db
 try:
     cursor.execute(
-        "SELECT monitor_id,monitor_type,monitor_source FROM monitor WHERE monitor_type=? AND monitor_state=?",
+        "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=? AND monitor_state=?",
         ('ping',1))
 except mariadb.Error as e:
     print(f"Error getting result set: {e}")
@@ -45,7 +58,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         # store result in the db as -1   
         try:
             cursor.execute(
-                "INSERT INTO data_monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
+                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
                 (monitor_id, monitor_type, monitor_source, -1))
         except mariadb.Error as e:
             print(f"Error: {e}")
@@ -55,7 +68,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         # store result in the db as 0    
         try:
             cursor.execute(
-                "INSERT INTO data_monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
+                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
                 (monitor_id, monitor_type, monitor_type, monitor_source, 0))
         except mariadb.Error as e:
             print(f"Error: {e}")
@@ -66,7 +79,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         # store result in the db as response time in microseconds
         try:
             cursor.execute(
-                "INSERT INTO data_monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
+                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
                 (monitor_id, monitor_type, monitor_source, responseTimeMilliseconds))
         except mariadb.Error as e:
             print(f"Error: {e}")
