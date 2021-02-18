@@ -4,9 +4,9 @@
 
 # DEPENDENCIES
 # Install python
-# Install ping3 "pip install ping3"
-# Install mariadb "pip install mariadb"
-# Install dotenv "pip install python-dotenv"
+# Install ping3 "python -m pip install ping3"
+# Install mariadb "python -m pip install mysql-connector-python"
+# Install dotenv "python -m pip install python-dotenv"
 
 # HOW TO RUN
 # run cmd "python mintotaurPingMonitor.py"
@@ -16,7 +16,7 @@
 # TODO
 
 import ping3
-import mariadb
+import mysql.connector
 import sys
 import datetime
 import os
@@ -25,15 +25,15 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 try:
-    conn = mariadb.connect(
+    conn = mysql.connector.connect(
         user=os.getenv("DB_USERNAME"),
         password=os.getenv("DB_PASSWORD"),
         host=os.getenv("DB_HOST"),
         port=int(os.getenv("DB_PORT")),
         database=os.getenv("DB_DATABASE")
     )
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
+except mysql.connector.Error as err:
+    print(err)
     sys.exit(1)
 
 # get db connection cursor
@@ -41,11 +41,11 @@ cursor = conn.cursor()
 
 # get list of ping monitors from the db
 try:
-    cursor.execute(
-        "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=? AND monitor_state=?",
-        ('ping',1))
-except mariadb.Error as e:
-    print(f"Error getting result set: {e}")
+    sql = "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=%s AND monitor_state=%s"
+    val = ('ping', 1)
+    cursor.execute(sql, val)
+except mysql.connector.Error as err:
+    print(err)
     sys.exit(1)
 
 results = cursor.fetchall()
@@ -57,32 +57,32 @@ for (monitor_id, monitor_type, monitor_source) in results:
         # host unknown (e.g. domain name lookup error)
         # store result in the db as -1   
         try:
-            cursor.execute(
-                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
-                (monitor_id, monitor_type, monitor_source, -1))
-        except mariadb.Error as e:
-            print(f"Error: {e}")
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, -1)
+            cursor.execute(sql, val)
+        except mysql.connector.Error as err:
+            print(err)
         continue
     if response == None:
         # host timed out (e.g. resolved IP address but no response)
         # store result in the db as 0    
         try:
-            cursor.execute(
-                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
-                (monitor_id, monitor_type, monitor_type, monitor_source, 0))
-        except mariadb.Error as e:
-            print(f"Error: {e}")
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_type, monitor_source, 0)
+            cursor.execute(sql, val)
+        except mysql.connector.Error as err:
+            print(err)
         continue
     else:
         # response recieved in microseconds
         responseTimeMilliseconds = str(round(response * 1000))
         # store result in the db as response time in microseconds
         try:
-            cursor.execute(
-                "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (?, ?, ?, ?)", 
-                (monitor_id, monitor_type, monitor_source, responseTimeMilliseconds))
-        except mariadb.Error as e:
-            print(f"Error: {e}")
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, responseTimeMilliseconds)
+            cursor.execute(sql, val)
+        except mysql.connector.Error as err:
+            print(err)
 
 
 # commit db transaction and close conection
