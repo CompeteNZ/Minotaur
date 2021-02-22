@@ -53,6 +53,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
 
     try:
         url = hyperlink.parse(monitor_source)
+        url.normalize()
         response = requests.head(url.to_text())
         print(response.status_code)
         # prints the int of the status code. Find more at httpstatusrappers.com :)
