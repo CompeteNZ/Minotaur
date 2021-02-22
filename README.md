@@ -1,16 +1,12 @@
 ﻿# Minotaur
 
 # Fresh Install
-After you have cloned Minotaur you will need to:
+After you have cloned Minotaur into your web root you will need to:
 - copy .env file to laravel root directory
 - run composer install
 - run php artisan key:generate
-- update virtual host directory setting to enable .htaccess and rewrites as below example
-    <Directory /var/www/html/minotaur/public>
-   	    Options Indexes FollowSymLinks
-    	AllowOverride All
-    	Require all granted
-    </Directory>
+- update web config document root to /public
+- update web config to enable .htaccess and rewrites
 
 # Create new user:
 - run php artisan tinker
