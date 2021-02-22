@@ -40,7 +40,7 @@ cursor = conn.cursor()
 # get list of ping monitors from the db
 try:
     sql = "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=%s AND monitor_state=%s"
-    val = ('ping', 1)
+    val = ('http', 1)
     cursor.execute(sql, val)
 except mysql.connector.Error as err:
     print(err)
