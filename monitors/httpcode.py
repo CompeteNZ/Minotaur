@@ -16,9 +16,12 @@
 # TODO
 
 import os
-import hyperlink
+import sys
+import urllib
 import requests
 import mysql.connector
+
+from hyperlink import URL
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
@@ -52,14 +55,16 @@ results = cursor.fetchall()
 for (monitor_id, monitor_type, monitor_source) in results:
 
     try:
-        url = hyperlink.parse(monitor_source)
-        url = url.normalize()
-        response = requests.head(url.to_text())
-        print(response.status_code)
-        # prints the int of the status code. Find more at httpstatusrappers.com :)
+        url = urllib.parse.urlparse(monitor_source, 'http')
+        url = URL.from_text(url.geturl())
+        url = url.replace(scheme="http")
+        address = url.normalize().to_text()
+        address = address.replace("///", "//")
+
+        response = requests.head(address)
+
     except requests.ConnectionError:
-        response == False
-        print("failed to connect")
+        response = False
 
     if response == False:
         # host unknown (e.g. domain name lookup error)
