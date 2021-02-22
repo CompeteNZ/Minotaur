@@ -1,17 +1,17 @@
 # DESCRIPTION
-# Run monitor ping checks and store results in the db
+# Run ping check and store the results in the db
 # monitor_source = host address
 
 # DEPENDENCIES
 # Install python
 # Install ping3 "python -m pip install ping3"
-# Install mariadb "python -m pip install mysql-connector-python"
+# Install mysql.connector "python -m pip install mysql-connector-python"
 # Install dotenv "python -m pip install python-dotenv"
 
 # HOW TO RUN
-# run cmd "python mintotaurPingMonitor.py"
-# automate on windows setup a bat with command "python <script>" see batch folder for batch files
-# automate on linux setup cron with command "python <script>"
+# run cmd "python <script>"
+# automate on windows using a bat file with command "python <script>" see batch folder for batch files
+# automate on linux using cron with command "python <script>"
 
 # TODO
 

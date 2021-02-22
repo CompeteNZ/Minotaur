@@ -1,9 +1,27 @@
+# DESCRIPTION
+# Checks for monitors with incorrect monitor_source i.e. result is host not found by looking at the last monitor results
+# monitor_source = host address
+
+# DEPENDENCIES
+# Install python
+# Install ping3 "python -m pip install ping3"
+# Install mariadb "python -m pip install mysql-connector-python"
+# Install dotenv "python -m pip install python-dotenv"
+
+# HOW TO RUN
+# run cmd "python <script>"
+# automate on windows setup a bat with command "python <script>" see batch folder for batch files
+# automate on linux setup cron with command "python <script>"
+
+# TODO
+# Covert from mariadb to mysql.connector
+
 import mariadb
 import sys
 import numpy as np
 
 # INFO
-# This module checks for monitors with incorrect monitor_source i.e. result is host not found
+# 
 # monitor_source = host address
 # to automate on windows setup a bat with command "python <script>""
 # to automate on linux setup cron with command "python <script>""

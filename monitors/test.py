@@ -1,4 +1,6 @@
 
+# simple ping test using os.popen
+
 import os
 
 hostname = "notsomuchwork.nz"
