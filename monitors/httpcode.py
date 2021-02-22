@@ -61,7 +61,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         address = url.normalize().to_text()
         address = address.replace("///", "//")
 
-        response = requests.head(address)
+        response = requests.head(address, allow_redirects=True)
 
     except requests.ConnectionError:
         response = False
