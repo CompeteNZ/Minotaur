@@ -16,6 +16,7 @@
 # TODO
 
 import os
+import hyperlink
 import requests
 import mysql.connector
 
@@ -51,7 +52,8 @@ results = cursor.fetchall()
 for (monitor_id, monitor_type, monitor_source) in results:
 
     try:
-        response = requests.head(monitor_source)
+        url = hyperlink.parse(monitor_source)
+        response = requests.head(url.to_text())
         print(response.status_code)
         # prints the int of the status code. Find more at httpstatusrappers.com :)
     except requests.ConnectionError:
