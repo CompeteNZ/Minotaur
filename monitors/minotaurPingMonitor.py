@@ -63,6 +63,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         except mysql.connector.Error as err:
             print(err)
         continue
+
     if response == None:
         # host timed out (e.g. resolved IP address but no response)
         # store result in the db as 0    
@@ -73,6 +74,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
         except mysql.connector.Error as err:
             print(err)
         continue
+
     else:
         # response recieved in microseconds
         responseTimeMilliseconds = str(round(response * 1000))
@@ -83,7 +85,6 @@ for (monitor_id, monitor_type, monitor_source) in results:
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
-
 
 # commit db transaction and close conection
 conn.commit()
