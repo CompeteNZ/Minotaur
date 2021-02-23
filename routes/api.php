@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
                     ->select(DB::raw('count(*) as errors'))
                     ->where('monitor_id', $monitor->monitor_id)
                     ->where('monitor_result', '!=', '200')
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
+                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
                     ->get();
                 break;
         }
@@ -76,7 +76,7 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
                     ->select(DB::raw('count(*) as errors'))
                     ->where('monitor_id', $monitor->monitor_id)
                     ->where('monitor_result', '<=', 0)
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
+                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
                     ->get();
                 break;
             case "http":
@@ -84,7 +84,7 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
                     ->select(DB::raw('count(*) as errors'))
                     ->where('monitor_id', $monitor->monitor_id)
                     ->where('monitor_result', '!=', '200')
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
+                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
                     ->get();
                 break;
         }
