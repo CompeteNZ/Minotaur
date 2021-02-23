@@ -108,8 +108,48 @@
                 <template v-slot:[`item.updated_at`]="{ item }">
                     <v-chip>{{ formatDate(item.updated_at) }}</v-chip>
                 </template>
-                <template v-slot:expanded-item="{ headers }">
-                    <td :colspan="headers.length">Peek-a-boo!</td>
+                <template v-slot:expanded-item="{ headers, item }" left>
+                    <td :colspan="headers.length">
+                        <v-chip
+                            class="ma-2"
+                            color="green"
+                            text-color="white"
+                            >
+                            <v-avatar
+                                left
+                                class="green darken-4"
+                            >
+                                {{item.errors_last_1hour}}
+                            </v-avatar>
+                            Errors last hour
+                        </v-chip>
+                        <v-chip
+                            class="ma-2"
+                            color="green"
+                            text-color="white"
+                            >
+                            <v-avatar
+                                left
+                                class="green darken-4"
+                            >
+                                {{item.errors_last_24hour}}
+                            </v-avatar>
+                            Errors last day
+                        </v-chip>
+                                                <v-chip
+                            class="ma-2"
+                            color="green"
+                            text-color="white"
+                            >
+                            <v-avatar
+                                left
+                                class="green darken-4"
+                            >
+                                {{item.errors_last_week}}
+                            </v-avatar>
+                            Errors last week
+                        </v-chip>
+                    </td>
                 </template>
 
             </v-data-table>

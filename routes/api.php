@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
-use Minotaur\Monitor;
 use Minotaur\User;
+use Minotaur\Monitor;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,76 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
 
     $user = $request->user();
 
-    return Monitor::where('user_id', $user->id)->get();
+    $monitors = Monitor::where('user_id', $user->id)->get();
+
+    // Get monitor results
+    foreach($monitors as $monitor)
+    {
+        switch($monitor->monitor_type)
+        {
+            case "ping":
+                $errors_last_1hour = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '<=', 0)
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' HOUR)")
+                    ->get();
+                break;
+            case "http":
+                $errors_last_1hour = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '!=', '200')
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' HOUR)")
+                    ->get();
+                break;
+        }
+        $monitor->errors_last_1hour = $errors_last_1hour[0]->errors;
+
+        switch($monitor->monitor_type)
+        {
+            case "ping":
+                $errors_last_24hour = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '<=', 0)
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
+                    ->get();
+                break;
+            case "http":
+                $errors_last_24hour = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '!=', '200')
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
+                    ->get();
+                break;
+        }
+        $monitor->errors_last_24hour = $errors_last_24hour[0]->errors;
+
+        switch($monitor->monitor_type)
+        {
+            case "ping":
+                $errors_last_week = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '<=', 0)
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
+                    ->get();
+                break;
+            case "http":
+                $errors_last_week = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_result', '!=', '200')
+                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
+                    ->get();
+                break;
+        }
+        $monitor->errors_last_week = $errors_last_week[0]->errors;
+    }
+
+    return $monitors;
 });
 
 Route::middleware('auth:sanctum')->get('monitors/all', function(Request $request) {
