@@ -132,7 +132,7 @@
                                 left
                                 class="green darken-4"
                             >
-                                {{item.errors_last_24hour}}
+                                {{item.errors_last_1day}}
                             </v-avatar>
                             Errors last day
                         </v-chip>
@@ -145,7 +145,7 @@
                                 left
                                 class="green darken-4"
                             >
-                                {{item.errors_last_week}}
+                                {{item.errors_last_1week}}
                             </v-avatar>
                             Errors last week
                         </v-chip>

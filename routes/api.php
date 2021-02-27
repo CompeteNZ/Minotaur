@@ -4,6 +4,7 @@ use Minotaur\User;
 use Minotaur\Monitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
 
     $monitors = Monitor::where('user_id', $user->id)->get();
 
-    // Get monitor results
+    // Get monitor results last 1 hour
     foreach($monitors as $monitor)
     {
         switch($monitor->monitor_type)
@@ -32,65 +33,81 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
             case "ping":
                 $errors_last_1hour = DB::table('monitor_results')
                     ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
-                    ->where('monitor_result', '<=', 0)
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' HOUR)")
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'ping')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 HOUR)))')
                     ->get();
                 break;
             case "http":
                 $errors_last_1hour = DB::table('monitor_results')
                     ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'http')
                     ->where('monitor_result', '!=', '200')
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' HOUR)")
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 HOUR)))')
                     ->get();
                 break;
         }
+        Log::debug($errors_last_1hour);
         $monitor->errors_last_1hour = $errors_last_1hour[0]->errors;
-
-        switch($monitor->monitor_type)
-        {
-            case "ping":
-                $errors_last_24hour = DB::table('monitor_results')
-                    ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
-                    ->where('monitor_result', '<=', 0)
-                    ->where('created_at', '<', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
-                    ->get();
-                break;
-            case "http":
-                $errors_last_24hour = DB::table('monitor_results')
-                    ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
-                    ->where('monitor_result', '!=', '200')
-                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' DAY)")
-                    ->get();
-                break;
-        }
-        $monitor->errors_last_24hour = $errors_last_24hour[0]->errors;
-
-        switch($monitor->monitor_type)
-        {
-            case "ping":
-                $errors_last_week = DB::table('monitor_results')
-                    ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
-                    ->where('monitor_result', '<=', 0)
-                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
-                    ->get();
-                break;
-            case "http":
-                $errors_last_week = DB::table('monitor_results')
-                    ->select(DB::raw('count(*) as errors'))
-                    ->where('monitor_id', $monitor->monitor_id)
-                    ->where('monitor_result', '!=', '200')
-                    ->where('created_at', '>', "DATE_SUB(NOW(), INTERVAL '1' WEEK)")
-                    ->get();
-                break;
-        }
-        $monitor->errors_last_week = $errors_last_week[0]->errors;
     }
 
+    // Get monitor results last 1 day
+    foreach($monitors as $monitor)
+    {
+        switch($monitor->monitor_type)
+        {
+            case "ping":
+                $errors_last_1day = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'ping')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 DAY)))')
+                    ->get();
+                break;
+            case "http":
+                $errors_last_1day = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'http')
+                    ->where('monitor_result', '!=', '200')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 DAY)))')
+                    ->get();
+                break;
+        }
+        Log::debug($errors_last_1day);
+        $monitor->errors_last_1day = $errors_last_1day[0]->errors;
+    }
+
+    // Get monitor results last 1 week
+    foreach($monitors as $monitor)
+    {
+        switch($monitor->monitor_type)
+        {
+            case "ping":
+                $errors_last_1week = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'ping')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 WEEK)))')
+                    ->get();
+                break;
+            case "http":
+                $errors_last_1week = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'http')
+                    ->where('monitor_result', '!=', '200')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 WEEK)))')
+                    ->get();
+                break;
+        }
+        Log::debug($errors_last_1week);
+        $monitor->errors_last_1week = $errors_last_1week[0]->errors;
+    }
     return $monitors;
 });
 
