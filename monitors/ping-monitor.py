@@ -52,7 +52,8 @@ results = cursor.fetchall()
 
 for (monitor_id, monitor_type, monitor_source) in results:
 
-    response = ping3.ping(monitor_source)
+    response = ping3.ping(monitor_source, unit='ms', timeout=10)
+
     if response == False:
         # host unknown (e.g. domain name lookup error)
         # store result in the db as -1   
@@ -76,12 +77,10 @@ for (monitor_id, monitor_type, monitor_source) in results:
         continue
 
     else:
-        # response recieved in microseconds
-        responseTimeMilliseconds = str(round(response * 1000))
-        # store result in the db as response time in microseconds
+        # store result in the db
         try:
             sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, responseTimeMilliseconds)
+            val = (monitor_id, monitor_type, monitor_source, response)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
