@@ -160,7 +160,7 @@
     export default {
         data: () => ({
                 currentPage: 1,
-                monitorTypeOptions:  [{value: 'http',text: 'HTTP'},{value: 'ping',text: 'PING'}],
+                monitorTypeOptions:  [{value: 'http',text: 'HTTP'},{value: 'ping',text: 'PING'},{value: 'dns',text: 'DNS'}],
                 monitorScheduleOptions: [{value: 5,text: '5 minutes'},{value: 15,text: '15 minutes'},{value: 30,text: '30 minutes'}],
                 monitorAlertOptions: [{value: 1,text: 'Alert after 1'},{value: 2,text: 'Alert after 2'},{value: 3,text: 'Alert after 3'}],
                 monitorStateOptions: [{value: -1,text: 'Disabled'},{value: 0,text: 'Paused'},{value: 1,text: 'Enabled'}],

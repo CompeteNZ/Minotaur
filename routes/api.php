@@ -30,6 +30,15 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
     {
         switch($monitor->monitor_type)
         {
+            case "dns":
+                $errors_last_1hour = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'dns')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 HOUR)))')
+                    ->get();
+                break;
             case "ping":
                 $errors_last_1hour = DB::table('monitor_results')
                     ->select(DB::raw('count(*) as errors'))
@@ -58,6 +67,15 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
     {
         switch($monitor->monitor_type)
         {
+            case "dns":
+                $errors_last_1day = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'dns')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 DAY)))')
+                    ->get();
+                break;
             case "ping":
                 $errors_last_1day = DB::table('monitor_results')
                     ->select(DB::raw('count(*) as errors'))
@@ -86,6 +104,15 @@ Route::middleware('auth:sanctum')->get('monitors', function(Request $request) {
     {
         switch($monitor->monitor_type)
         {
+            case "dns":
+                $errors_last_1week = DB::table('monitor_results')
+                    ->select(DB::raw('count(*) as errors'))
+                    ->where('monitor_id', '=', $monitor->monitor_id)
+                    ->where('monitor_type', '=', 'dns')
+                    ->where('monitor_result', '<=', '0')
+                    ->whereRAW('UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP((DATE_SUB(NOW(),INTERVAL 1 WEEK)))')
+                    ->get();
+                break;
             case "ping":
                 $errors_last_1week = DB::table('monitor_results')
                     ->select(DB::raw('count(*) as errors'))
