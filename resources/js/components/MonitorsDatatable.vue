@@ -35,7 +35,15 @@
                         <v-spacer></v-spacer>
                         <v-dialog v-model="dialog" max-width="500px">
                             <template v-slot:activator="{ on }">
-                                <v-btn color="indigo" dark class="mb-2" v-on="on" @click="newItem()">Add <v-icon>add</v-icon></v-btn>
+                                <v-btn color="indigo" dark class="mb-2 mr-10" v-on="on" @click="newItem()">Wizard Add <v-icon>auto_fix_high</v-icon></v-btn>
+                            </template>
+                            <v-card>
+                            </v-card>
+                        </v-dialog>
+                        <span> </span>
+                        <v-dialog v-model="dialog" max-width="500px">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="indigo" dark class="mb-2" v-on="on" @click="newItem()">Quick Add <v-icon>add</v-icon></v-btn>
                             </template>
                             <v-card>
                                 <v-card-title>

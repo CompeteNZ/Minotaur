@@ -42,15 +42,17 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel-'.get_current_user().'.log'),
+            'path' => storage_path('logs/single.log'),
             'level' => 'debug',
+            'permission' => 0777,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel-'.get_current_user().'.log'),
+            'path' => storage_path('logs/daily.log'),
             'level' => 'debug',
             'days' => 14,
+            'permission' => 0777,
         ],
 
         'slack' => [
