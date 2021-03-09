@@ -28,13 +28,15 @@ import errno
 
 from ipaddress import ip_address, IPv4Address 
 
-address = "2404:6800:4006:80f::200e"
+address = "2607:b400:92:26:0:97:1e7:39471"
 
 # Check if the address is ip4 or ip6 otherwise treat as a hostname
 try: 
    socket_type = socket.AF_INET if type(ip_address(address)) is IPv4Address else socket.AF_INET6
 except ValueError: 
    socket_type = socket.AF_INET
+
+print(socket_type)
 
 a_socket = socket.socket(socket_type, socket.SOCK_STREAM)
 
@@ -43,7 +45,10 @@ location = (address, 443)
 try:
    result = a_socket.connect_ex(location)
 except socket.error as err:
+   result = err.errno
    print(err.errno)
+
+print(result)
 
 if result == 11001:
    print("UNKNOWN HOST")

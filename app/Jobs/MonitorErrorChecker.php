@@ -56,27 +56,16 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'dns')
                 ->orderByDesc('created_at')
-                ->limit(2)
+                ->limit(1)
                 ->get();
-            
-            Log::info('Results ' . $results);
 
-            if($results && count($results) == 2)
+            if($results[0]->monitor_result <= 0)
             {
-                $merge = array($results[0]->monitor_result, $results[1]->monitor_result);
-                if(array_sum($merge) <= 0)
-                {
-                    Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                    Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
-                }
-                else
-                {
-                    Log::info('No errors found');
-                }                
+                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
+                Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
             }
         }
     }
-
     
     public function checkPingErrors()
     {
@@ -93,27 +82,16 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'ping')
                 ->orderByDesc('created_at')
-                ->limit(2)
+                ->limit(1)
                 ->get();
             
-            Log::info('Results ' . $results);
-
-            if($results && count($results) == 2)
+            if($results[0]->monitor_result <= 0)
             {
-                $merge = array($results[0]->monitor_result, $results[1]->monitor_result);
-                if(array_sum($merge) <= 0)
-                {
-                    Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                    Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
-                }
-                else
-                {
-                    Log::info('No errors found');
-                }                
+                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
+                Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
             }
         }
     }
-
     
     public function checkHttpErrors()
     {
@@ -130,22 +108,13 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'http')
                 ->orderByDesc('created_at')
-                ->limit(2)
+                ->limit(1)
                 ->get();
-            
-            Log::info('Results ' . $results);
 
-            if($results && count($results) == 2)
+            if($results[0]->monitor_result != 200)
             {
-                if($results[0]->monitor_result != 200 && $results[1]->monitor_result != 200)
-                {
-                    Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                    Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
-                }
-                else
-                {
-                    Log::info('No errors found');
-                }                
+                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
+                Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
             }
         }
     }
