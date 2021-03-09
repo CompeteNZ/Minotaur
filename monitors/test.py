@@ -38,12 +38,12 @@ except ValueError:
 
 a_socket = socket.socket(socket_type, socket.SOCK_STREAM)
 
-location = (address, 80)
+location = (address, 443)
 
 try:
    result = a_socket.connect_ex(location)
 except socket.error as err:
-   result = err.errno
+   print(err.errno)
 
 if result == 11001:
    print("UNKNOWN HOST")

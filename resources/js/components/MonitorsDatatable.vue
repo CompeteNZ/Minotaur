@@ -16,7 +16,7 @@
                 sort-desc
                 :headers="headers"
                 :items="monitors"
-                :items-per-page="5"
+                :items-per-page="10"
                 :search="search"
                 :single-expand="singleExpand"
                 :expanded.sync="expanded"

@@ -66,7 +66,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
 
     a_socket = socket.socket(socket_type, socket.SOCK_STREAM)
 
-    location = (monitor_source, 80)
+    location = (monitor_source, 443)
 
     try:
         response = a_socket.connect_ex(location)
