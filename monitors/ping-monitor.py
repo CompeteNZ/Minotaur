@@ -18,11 +18,15 @@
 import os
 import sys
 import ping3
+import socket
+import errno
 import datetime
 import mysql.connector
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
+
+from ipaddress import ip_address, IPv4Address 
 
 try:
     conn = mysql.connector.connect(
@@ -52,9 +56,26 @@ results = cursor.fetchall()
 
 for (monitor_id, monitor_type, monitor_source) in results:
 
-    response = ping3.ping(monitor_source, unit='ms', timeout=10)
+    #response = ping3.ping(monitor_source, unit='ms', timeout=10)
 
-    if response == False:
+    # Check if the address is ip4 or ip6 otherwise treat as a hostname
+    try: 
+        socket_type = socket.AF_INET if type(ip_address(monitor_source)) is IPv4Address else socket.AF_INET6
+    except ValueError: 
+        socket_type = socket.AF_INET
+
+    a_socket = socket.socket(socket_type, socket.SOCK_STREAM)
+
+    location = (monitor_source, 80)
+
+    try:
+        response = a_socket.connect_ex(location)
+    except socket.error as err:
+        response = err.errno
+
+    a_socket.close()
+
+    if response == 11001:
         # host unknown (e.g. domain name lookup error)
         # store result in the db as -1   
         try:
@@ -65,22 +86,22 @@ for (monitor_id, monitor_type, monitor_source) in results:
             print(err)
         continue
 
-    if response == None:
-        # host timed out (e.g. resolved IP address but no response)
-        # store result in the db as 0    
+    if response == 0:
+        # no error code
+        # store result in the db as 1    
         try:
             sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, 0)
+            val = (monitor_id, monitor_type, monitor_source, 1)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
         continue
 
     else:
-        # store result in the db
+        # store result in the db 0
         try:
             sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, response)
+            val = (monitor_id, monitor_type, monitor_source, 0)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
