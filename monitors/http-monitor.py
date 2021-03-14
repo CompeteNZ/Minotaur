@@ -65,13 +65,17 @@ for (monitor_id, monitor_type, monitor_source) in results:
 
     except requests.ConnectionError:
         response = False
+        try:
+            response = requests.head(address, allow_redirects=True) # try to connect again
+        except requests.ConnectionError:
+            response = False
 
     if response == False:
         # host unknown (e.g. domain name lookup error)
         # store result in the db as -1   
         try:
             sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, -1)
+            val = (monitor_id, monitor_type, monitor_source, requests.ConnectionError)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)

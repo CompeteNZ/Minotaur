@@ -16,7 +16,7 @@
                 sort-desc
                 :headers="headers"
                 :items="monitors"
-                :items-per-page="10"
+                :items-per-page="5"
                 :search="search"
                 :single-expand="singleExpand"
                 :expanded.sync="expanded"
@@ -58,6 +58,9 @@
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.monitor_source" label="Source"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-select v-if="editedItem.monitor_type === 'ping'" v-model="editedItem.monitor_port" :items="monitorPortOptions" label="Port"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-select v-model="editedItem.monitor_schedule" :items="monitorScheduleOptions" label="Schedule"></v-select>
@@ -169,6 +172,7 @@
         data: () => ({
                 currentPage: 1,
                 monitorTypeOptions:  [{value: 'http',text: 'HTTP'},{value: 'ping',text: 'PING'},{value: 'dns',text: 'DNS'}],
+                monitorPortOptions:  [{value: '80',text: '80 (web)'},{value: '443',text: '443 (web secure)'},{value: '3306',text: '3306 (mysql)'}],
                 monitorScheduleOptions: [{value: 5,text: '5 minutes'},{value: 15,text: '15 minutes'},{value: 30,text: '30 minutes'}],
                 monitorAlertOptions: [{value: 1,text: 'Alert after 1'},{value: 2,text: 'Alert after 2'},{value: 3,text: 'Alert after 3'}],
                 monitorStateOptions: [{value: -1,text: 'Disabled'},{value: 0,text: 'Paused'},{value: 1,text: 'Enabled'}],
