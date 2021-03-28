@@ -16,8 +16,8 @@ class MonitorSeeder extends Seeder
     public function run()
     {
         //
-        $monitors = array('propertyconsultants.nz',
-            '103.49.172.204',
+        $monitors = array(
+            'propertyconsultants.nz',
             'sharedspace.co.nz',
             'energise.co.nz',
             'realestate.co.nz',
