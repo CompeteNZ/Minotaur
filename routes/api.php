@@ -154,6 +154,7 @@ Route::middleware('auth:sanctum')->post('monitors/create', function(Request $req
     $monitor->monitor_id = strtoupper(Str::random(12));
     $monitor->monitor_type = $request->input('monitor_type');
     $monitor->monitor_source = $request->input('monitor_source');
+    $monitor->monitor_port = $request->input('monitor_port');
     $monitor->monitor_schedule = $request->input('monitor_schedule', 15);
     $monitor->monitor_alert = $request->input('monitor_alert', 3);
     
@@ -174,6 +175,7 @@ Route::middleware('auth:sanctum')->post('monitors/edit', function(Request $reque
 
     $monitor->monitor_type = $request->input('monitor_type');
     $monitor->monitor_source = $request->input('monitor_source');
+    $monitor->monitor_port = $request->input('monitor_port');
     $monitor->monitor_schedule = $request->input('monitor_schedule', 15);
     $monitor->monitor_alert = $request->input('monitor_alert', 3);
     
@@ -192,4 +194,25 @@ Route::middleware('auth:sanctum')->post('monitors/delete', function(Request $req
     $monitor->where('monitor_id', $request->input('monitor_id'))->where('user_id', $user->id)->delete();
 
     return $monitor;
+});
+
+// This is an api route to trigger monitor runs per slave on geolocated servers triggered by a master server
+// This is TODO but several servers would be setup with a clone of this project and mapped to a db list of these servers
+// The master server via cron would loop through this list making a call to the api on each thus executing monitors
+Route::middleware('auth:sanctum')->post('monitors/runtime', function(Request $request) {
+
+    $user = $request->user();
+    $monitor_slave_id = $request->monitor_slave_id();
+
+    $monitors['dns_monitor_path'] = base_path() . '/monitors/dns-monitor.py';
+    $monitors['http_monitor_path'] = base_path() . '/monitors/http-monitor.py';
+    $monitors['ping_monitor_path'] = base_path() . '/monitors/ping-monitor.py';
+
+    foreach($monitors as $monitor)
+    {
+        $command = escapeshellcmd($monitor);
+        $output = shell_exec($command);    
+    }
+
+    return true;
 });

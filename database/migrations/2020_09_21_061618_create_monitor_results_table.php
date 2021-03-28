@@ -15,6 +15,7 @@ class CreateMonitorResultsTable extends Migration
     {
         Schema::create('monitor_results', function (Blueprint $table) {
             $table->id();
+            $table->string('monitor_slave_id');
             $table->string('monitor_id');
             $table->string('monitor_type');
             $table->string('monitor_source');

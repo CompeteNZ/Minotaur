@@ -15,6 +15,7 @@
 
 # TODO
 
+#!/usr/bin/env python3
 import os
 import sys
 import ping3
@@ -45,7 +46,7 @@ cursor = conn.cursor()
 
 # get list of ping monitors from the db
 try:
-    sql = "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=%s AND monitor_state=%s"
+    sql = "SELECT monitor_id,monitor_type,monitor_source,monitor_port FROM monitors WHERE monitor_type=%s AND monitor_state=%s"
     val = ('ping', 1)
     cursor.execute(sql, val)
 except mysql.connector.Error as err:
@@ -54,7 +55,7 @@ except mysql.connector.Error as err:
 
 results = cursor.fetchall()
 
-for (monitor_id, monitor_type, monitor_source) in results:
+for (monitor_id, monitor_type, monitor_source, monitor_port) in results:
 
     #response = ping3.ping(monitor_source, unit='ms', timeout=10)
 
@@ -66,7 +67,7 @@ for (monitor_id, monitor_type, monitor_source) in results:
 
     a_socket = socket.socket(socket_type, socket.SOCK_STREAM)
 
-    location = (monitor_source, 443)
+    location = (monitor_source, monitor_port)
 
     try:
         response = a_socket.connect_ex(location)

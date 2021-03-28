@@ -172,7 +172,7 @@
         data: () => ({
                 currentPage: 1,
                 monitorTypeOptions:  [{value: 'http',text: 'HTTP'},{value: 'ping',text: 'PING'},{value: 'dns',text: 'DNS'}],
-                monitorPortOptions:  [{value: '80',text: '80 (web)'},{value: '443',text: '443 (web secure)'},{value: '3306',text: '3306 (mysql)'}],
+                monitorPortOptions:  [{value: 80,text: '80 (web)'},{value: 443,text: '443 (web secure)'},{value: 3306,text: '3306 (mysql)'}],
                 monitorScheduleOptions: [{value: 5,text: '5 minutes'},{value: 15,text: '15 minutes'},{value: 30,text: '30 minutes'}],
                 monitorAlertOptions: [{value: 1,text: 'Alert after 1'},{value: 2,text: 'Alert after 2'},{value: 3,text: 'Alert after 3'}],
                 monitorStateOptions: [{value: -1,text: 'Disabled'},{value: 0,text: 'Paused'},{value: 1,text: 'Enabled'}],
@@ -186,6 +186,7 @@
                     monitor_id: 0,
                     monitor_type: '',
                     monitor_source: '',
+                    monitor_port: '',
                     monitor_schedule: 5,
                     monitor_alert: 1,
                     monitor_next: '',
@@ -199,6 +200,7 @@
                     monitor_id: 0,
                     monitor_type: '',
                     monitor_source: '',
+                    monitor_port: '',
                     monitor_schedule: 5,
                     monitor_alert: 1,
                     monitor_next: '',
@@ -333,6 +335,7 @@
                 return axios.post('/api/monitors/create', {
                     monitor_type: editedItem.monitor_type,
                     monitor_source: editedItem.monitor_source,
+                    monitor_port: editedItem.monitor_port,
                     monitor_schedule: editedItem.monitor_schedule,
                     monitor_alert: editedItem.monitor_alert
                 })
@@ -348,6 +351,7 @@
                     id: editedItem.id,
                     monitor_type: editedItem.monitor_type,
                     monitor_source: editedItem.monitor_source,
+                    monitor_port: editedItem.monitor_port,
                     monitor_schedule: editedItem.monitor_schedule,
                     monitor_alert: editedItem.monitor_alert,
                     monitor_state: editedItem.monitor_state

@@ -19,6 +19,7 @@ class CreateMonitorsTable extends Migration
             $table->string('monitor_id');
             $table->string('monitor_type');
             $table->string('monitor_source');
+            $table->integer('monitor_port')->nullable();
             $table->smallinteger('monitor_schedule');
             $table->smallinteger('monitor_alert');
             $table->datetime('monitor_last');
