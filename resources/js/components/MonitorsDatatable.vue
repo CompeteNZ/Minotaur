@@ -173,7 +173,7 @@
                 currentPage: 1,
                 monitorTypeOptions:  [{value: 'http',text: 'HTTP'},{value: 'ping',text: 'PING'},{value: 'dns',text: 'DNS'}],
                 monitorPortOptions:  [{value: 80,text: '80 (web)'},{value: 443,text: '443 (web secure)'},{value: 3306,text: '3306 (mysql)'}],
-                monitorScheduleOptions: [{value: 5,text: '5 minutes'},{value: 15,text: '15 minutes'},{value: 30,text: '30 minutes'}],
+                monitorScheduleOptions: [{value: 1,text: '1 minute'},{value: 5,text: '5 minutes'},{value: 15,text: '15 minutes'}],
                 monitorAlertOptions: [{value: 1,text: 'Alert after 1'},{value: 2,text: 'Alert after 2'},{value: 3,text: 'Alert after 3'}],
                 monitorStateOptions: [{value: -1,text: 'Disabled'},{value: 0,text: 'Paused'},{value: 1,text: 'Enabled'}],
                 dialog: false,
