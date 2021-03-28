@@ -23,6 +23,11 @@ class CreateMonitorResultsTable extends Migration
             $table->integer('monitor_result');
             $table->string('monitor_error')->nullable();
             $table->timestamp('created_at')->useCurrent();
+
+            // Indexes
+
+            $table->index('monitor_id', 'monitor_type');
+            $table->index('monitor_result');
         });
     }
 
