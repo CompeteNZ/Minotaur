@@ -14,3 +14,4 @@ After you have cloned Minotaur into your web root you will need to:
 # Setup database and seed users/monitors:
 - run php artisan migrate --seed
 
+# Edit this file on github!
