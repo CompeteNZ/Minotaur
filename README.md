@@ -1,4 +1,5 @@
 ﻿# Minotaur
+ Edit this file on github!
 
 # Installation
 - clone Minotaur into your web root
@@ -12,4 +13,4 @@
 - run composer dump-autoload
 - run php artisan migrate --seed
 
-Edit this file on github!
+
