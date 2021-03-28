@@ -15,11 +15,13 @@ class CreateMonitorResultsTable extends Migration
     {
         Schema::create('monitor_results', function (Blueprint $table) {
             $table->id();
-            $table->string('monitor_slave_id');
+            $table->integer('slave_id')->default(0);
             $table->string('monitor_id');
             $table->string('monitor_type');
             $table->string('monitor_source');
+            $table->integer('monitor_port')->nullable();
             $table->integer('monitor_result');
+            $table->string('monitor_error')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
     }
