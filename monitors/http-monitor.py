@@ -53,43 +53,46 @@ except mysql.connector.Error as err:
 
 results = cursor.fetchall()
 
+# headers for request, some hosts require user-agent
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
 for (monitor_id, monitor_type, monitor_source) in results:
 
     try:
-        url = urllib.parse.urlparse(monitor_source, 'http')
+        url = urllib.parse.urlparse(monitor_source, 'https')
         url = URL.from_text(url.geturl())
-        url = url.replace(scheme="http")
+        url = url.replace(scheme="https")
         address = url.normalize().to_text()
         address = address.replace("///", "//")
-
-        response = requests.head(address, allow_redirects=True)
+        
+        response = requests.head(address, allow_redirects=True, headers=headers)
 
     except requests.ConnectionError:
         response = False
         try:
-            response = requests.head(address, allow_redirects=True) # try to connect again
-        except requests.ConnectionError:
+            response = requests.head(address, allow_redirects=True, headers=headers) # try to connect again
+        except requests.ConnectionError as error:
+            responseError = error
             response = False
 
     if response == False:
-        # host unknown (e.g. domain name lookup error)
+        # could not connect
         # store result in the db as -1   
         try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, requests.ConnectionError)
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result, monitor_error) VALUES (%s, %s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, -1, str(responseError))
             cursor.execute(sql, val)
-        except mysql.connector.Error as err:
-            print(err)
-        continue
+        except mysql.connector.Error as error:
+            print(error)
 
     else:
-        # store result in the db
+        # connected now store response in the db
         try:
             sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
             val = (monitor_id, monitor_type, monitor_source, response.status_code)
             cursor.execute(sql, val)
-        except mysql.connector.Error as err:
-            print(err)
+        except mysql.connector.Error as error:
+            print(error)
 
 # commit db transaction and close conection
 conn.commit()
