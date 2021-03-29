@@ -80,8 +80,8 @@ for (monitor_id, monitor_type, monitor_source, monitor_port) in results:
         # host unknown (e.g. domain name lookup error)
         # store result in the db as -1   
         try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, -1)
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_port, monitor_result) VALUES (%s, %s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, monitor_port, -1)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
@@ -91,8 +91,8 @@ for (monitor_id, monitor_type, monitor_source, monitor_port) in results:
         # no error code
         # store result in the db as 1    
         try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, 1)
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_port, monitor_result) VALUES (%s, %s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, monitor_port, 1)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
@@ -101,8 +101,8 @@ for (monitor_id, monitor_type, monitor_source, monitor_port) in results:
     else:
         # store result in the db 0
         try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, 0)
+            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_port, monitor_result) VALUES (%s, %s, %s, %s, %s)"
+            val = (monitor_id, monitor_type, monitor_source, monitor_port, 0)
             cursor.execute(sql, val)
         except mysql.connector.Error as err:
             print(err)
