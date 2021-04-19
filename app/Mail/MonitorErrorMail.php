@@ -33,12 +33,24 @@ class MonitorErrorMail extends Mailable
      */
     public function build()
     {
+        switch($this->result->monitor_result)
+        {
+            case "-1":
+                $result_error = 'HOST NOT FOUND / HOST UNKNOWN';
+                break;
+            case "0":
+                $result_error = 'HOST IS DOWN / COULD NOT CONNECT';
+            default:
+                $result_error = $this->result->monitor_result;
+            break;
+        }
+
         return $this->view('emails.alerts.error')->with([
             'monitor_id' => $this->monitor->monitor_id,
             'monitor_type' => strtoupper($this->monitor->monitor_type),
             'monitor_source' => $this->monitor->monitor_source,
             'result_time' => $this->result->created_at,
-            'result_error' => $this->result->monitor_result? 'HOST UNKNOWN' : 'DOWN',
+            'result_error' => $result_error,
         ]);;
     }
 }

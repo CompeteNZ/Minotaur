@@ -42,7 +42,7 @@ except mysql.connector.Error as err:
 # get db connection cursor
 cursor = conn.cursor()
 
-# get list of ping monitors from the db
+# get list of http monitors from the db
 try:
     sql = "SELECT monitor_id,monitor_type,monitor_source FROM monitors WHERE monitor_type=%s AND monitor_state=%s"
     val = ('http', 1)
