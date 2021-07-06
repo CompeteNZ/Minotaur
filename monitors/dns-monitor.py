@@ -71,14 +71,15 @@ for (monitor_id, monitor_type, monitor_source) in results:
         continue
 
     else:
+        # UPDATE - NOW NOT SAVING OK RESULTS ONLY ERRORS (saves on database etc)
         # host found (e.g. resolved IP address)
         # store result in the db 
-        try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, 1)
-            cursor.execute(sql, val)
-        except mysql.connector.Error as err:
-            print(err)
+        #try:
+        #    sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
+        #    val = (monitor_id, monitor_type, monitor_source, 1)
+        #    cursor.execute(sql, val)
+        #except mysql.connector.Error as err:
+        #    print(err)
         continue
 
 # commit db transaction and close conection

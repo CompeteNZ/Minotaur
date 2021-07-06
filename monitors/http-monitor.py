@@ -86,13 +86,15 @@ for (monitor_id, monitor_type, monitor_source) in results:
             print(error)
 
     else:
+        # UPDATE - NOW NOT SAVING OK RESULTS ONLY ERRORS (saves on database etc)
         # connected now store response in the db
-        try:
-            sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
-            val = (monitor_id, monitor_type, monitor_source, response.status_code)
-            cursor.execute(sql, val)
-        except mysql.connector.Error as error:
-            print(error)
+        #try:
+        #    sql = "INSERT INTO monitor_results (monitor_id, monitor_type, monitor_source, monitor_result) VALUES (%s, %s, %s, %s)"
+        #    val = (monitor_id, monitor_type, monitor_source, response.status_code)
+        #    cursor.execute(sql, val)
+        #except mysql.connector.Error as error:
+        #    print(error)
+        continue
 
 # commit db transaction and close conection
 conn.commit()
