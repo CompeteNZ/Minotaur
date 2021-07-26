@@ -48,25 +48,22 @@ class MonitorErrorChecker implements ShouldQueue
         ->where('monitor_type', '=', 'dns')
         ->get();
 
-        // get results for each monitor and check for errors
+        // get results for each monitor and check for errors in the last 5 minutes
         foreach($monitors as $monitor)
         {
             // get last two results
             $results = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'dns')
-                ->orderByDesc('created_at')
-                ->limit(2)
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
                 ->get();
 
-            Log::info('Http errors check for ' . $monitor->monitor_id);
-            Log::info($results);
-
-            /*if($results[0]->monitor_result <= 0)
+            if($results)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
+                Log::info($results);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
-            }*/
+            }
         }
     }
     
@@ -77,25 +74,22 @@ class MonitorErrorChecker implements ShouldQueue
         ->where('monitor_type', '=', 'ping')
         ->get();
 
-        // get results for each monitor and check for errors
+        // get results for each monitor and check for errors in the last 5 minutes
         foreach($monitors as $monitor)
         {
             // get last two results
             $results = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'ping')
-                ->orderByDesc('created_at')
-                ->limit(2)
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
                 ->get();
             
-            Log::info('Http errors check for ' . $monitor->monitor_id);
-            Log::info($results);
-
-            /*if($results[0]->monitor_result <= 0)
+            if($results)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
+                Log::info($results);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
-            }*/
+            }
         }
     }
     
@@ -106,25 +100,22 @@ class MonitorErrorChecker implements ShouldQueue
         ->where('monitor_type', '=', 'http')
         ->get();
 
-        // get results for each monitor and check for errors
+        // get results for each monitor and check for errors in the last 5 minutes
         foreach($monitors as $monitor)
         {
             // get last two results
             $results = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'http')
-                ->orderByDesc('created_at')
-                ->limit(2)
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
                 ->get();
 
-            Log::info('Http errors check for ' . $monitor->monitor_id);
-            Log::info($results);
-
-            /*if($results[0]->monitor_result != 200)
+            if($results)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
-            }*/
+                Log::info($results);
+                Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
+            }
         }
     }
 }
