@@ -55,7 +55,7 @@ class MonitorErrorChecker implements ShouldQueue
             $query= DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'dns')
-                ->where('created_at', '>=', 'DATE_SUB(NOW(), INTERVAL 3 MINUTE)');
+                ->where('created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'));
                 
             $results_count = $query->count();
             $results = $query->get();
@@ -83,7 +83,7 @@ class MonitorErrorChecker implements ShouldQueue
             $query = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'ping')
-                ->where('created_at', '>=', 'DATE_SUB(NOW(), INTERVAL 3 MINUTE)');
+                ->where('created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'));
             
             $results_count = $query->count();
             $results = $query->get();
@@ -111,7 +111,7 @@ class MonitorErrorChecker implements ShouldQueue
             $query = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'http')
-                ->where('created_at', '>=', 'DATE_SUB(NOW(), INTERVAL 3 MINUTE)');
+                ->where('created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'));
 
             $results_count = $query->count();
             $results = $query->get();
