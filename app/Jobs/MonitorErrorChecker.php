@@ -60,10 +60,10 @@ class MonitorErrorChecker implements ShouldQueue
             $results_count = $query->count();
             $results = $query->get();
 
-            if($results_count)
+            Log::info("Error check for monitor id: " . $monitor->monitor_id . " results found = " . $results_count);
+
+            if($results_count > 1)
             {
-                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                Log::info($results);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
             }
         }
@@ -89,10 +89,10 @@ class MonitorErrorChecker implements ShouldQueue
             $results_count = $query->count();
             $results = $query->get();
 
-            if($results_count)
+            Log::info("Error check for monitor id: " . $monitor->monitor_id . " results found = " . $results_count);
+
+            if($results_count > 1)
             {
-                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                Log::info($results);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
             }
         }
@@ -118,10 +118,10 @@ class MonitorErrorChecker implements ShouldQueue
             $results_count = $query->count();
             $results = $query->get();
 
-            if($results_count)
+            Log::info("Error check for monitor id: " . $monitor->monitor_id . " results found = " . $results_count);
+
+            if($results_count > 1)
             {
-                Log::error('Error found with monitor id: ' . $monitor->monitor_id);
-                Log::info($results);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
             }
         }
