@@ -56,14 +56,17 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'dns')
                 ->orderByDesc('created_at')
-                ->limit(1)
+                ->limit(2)
                 ->get();
 
-            if($results[0]->monitor_result <= 0)
+            Log::info('Http errors check for ' . $monitor->monitor_id);
+            Log::info($results);
+
+            /*if($results[0]->monitor_result <= 0)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
-            }
+            }*/
         }
     }
     
@@ -82,14 +85,17 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'ping')
                 ->orderByDesc('created_at')
-                ->limit(1)
+                ->limit(2)
                 ->get();
             
-            if($results[0]->monitor_result <= 0)
+            Log::info('Http errors check for ' . $monitor->monitor_id);
+            Log::info($results);
+
+            /*if($results[0]->monitor_result <= 0)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));             
-            }
+            }*/
         }
     }
     
@@ -108,14 +114,17 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'http')
                 ->orderByDesc('created_at')
-                ->limit(1)
+                ->limit(2)
                 ->get();
 
-            if($results[0]->monitor_result != 200)
+            Log::info('Http errors check for ' . $monitor->monitor_id);
+            Log::info($results);
+
+            /*if($results[0]->monitor_result != 200)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Mail::to("pete@davisonline.co.nz")->send(new MonitorErrorMail($monitor, $results[0]));
-            }
+            }*/
         }
     }
 }

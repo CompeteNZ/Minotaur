@@ -103,7 +103,7 @@
         <v-spacer></v-spacer>
         @guest
         @else
-        <span class="white--text font-weight-thin">Welcome back {{ Auth::user()->name }}, you are logged in!</span>
+        <span class="white--text font-weight-thin">Welcome back {{ Auth::user()->name }}</span>
         <user-quick-menu></user-quick-menu>
         @endif
     </v-app-bar>
