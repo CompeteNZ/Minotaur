@@ -80,11 +80,10 @@ class MonitorErrorChecker implements ShouldQueue
         foreach($monitors as $monitor)
         {
             // get last two results
-            $results = DB::table('monitor_results')->select()
+            $query = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'ping')
-                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
-                ->get();
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE');
             
             $results_count = $query->count();
             $results = $query->get();
@@ -109,11 +108,10 @@ class MonitorErrorChecker implements ShouldQueue
         foreach($monitors as $monitor)
         {
             // get last two results
-            $results = DB::table('monitor_results')->select()
+            $query = DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'http')
-                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
-                ->get();
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE');
 
             $results_count = $query->count();
             $results = $query->get();
