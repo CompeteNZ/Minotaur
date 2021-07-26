@@ -52,13 +52,15 @@ class MonitorErrorChecker implements ShouldQueue
         foreach($monitors as $monitor)
         {
             // get last two results
-            $results = DB::table('monitor_results')->select()
+            $query= DB::table('monitor_results')->select()
                 ->where('monitor_id', '=', $monitor->monitor_id)
                 ->where('monitor_type', '=', 'dns')
-                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
-                ->get();
+                ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE');
+                
+            $results_count = $query->count();
+            $results = $query->get();
 
-            if($results)
+            if($results_count)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Log::info($results);
@@ -84,7 +86,10 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
                 ->get();
             
-            if($results)
+            $results_count = $query->count();
+            $results = $query->get();
+
+            if($results_count)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Log::info($results);
@@ -110,7 +115,10 @@ class MonitorErrorChecker implements ShouldQueue
                 ->where('created_at', '>=', 'NOW() - INTERVAL 5 MINUTE')
                 ->get();
 
-            if($results)
+            $results_count = $query->count();
+            $results = $query->get();
+
+            if($results_count)
             {
                 Log::error('Error found with monitor id: ' . $monitor->monitor_id);
                 Log::info($results);
