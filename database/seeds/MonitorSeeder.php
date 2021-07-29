@@ -17,6 +17,16 @@ class MonitorSeeder extends Seeder
     {
         //
         $monitors = array(
+            'carpetsale.co.nz',
+            'thepropertymarket.co.nz',
+            'thedailyblog.co.nz',
+            'angeandpip.com',
+            'phonelogic.co.nz',
+            'hotleads.co.nz',
+            'bigcats.co.nz',
+            'fireflydigital.co.nz',
+            'littlegiant.co.nz',
+            'brownpaperbag.co.nz',
             'propertyconsultants.nz',
             'sharedspace.co.nz',
             'energise.co.nz',
